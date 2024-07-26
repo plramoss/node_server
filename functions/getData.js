@@ -1,16 +1,11 @@
-import hl7 from 'simple-hl7';
-
-let app = hl7.tcp();
-let counter = 0;
-
-const now = new Date();
-const brasilDateTime = new Intl.DateTimeFormat('pt-BR', {
-  year: 'numeric', month: '2-digit', day: '2-digit',
-  hour: '2-digit', minute: '2-digit', second: '2-digit',
-  timeZone: 'America/Sao_Paulo'
-}).format(now);
-
-function getData(data){
+export default function getData(data){
+  const now = new Date();
+  const brasilDateTime = new Intl.DateTimeFormat('pt-BR', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZone: 'America/Sao_Paulo'
+  }).format(now);
+  
   // segmentos
   let pidSegment = data.getSegment('PID');
   let obrSegment = data.getSegment('OBR');
@@ -58,64 +53,30 @@ function getData(data){
     "instrumentModel": instrumentModel,
     "sourceIp": "",
     "tests": [
-    {
-      "id": id,
-      "result": result,
-      "unit": unit,
-      "resultText": resultText,
-      "testTime": brasilDateTime,
-      "pid": pid,
-      "recordId": recordId,
-      "sampleId": sampleId,
-      "sampleType": sampleType,
-      "patient": {
-        "name": name,
-        "gender":gender,
-        "bedNumber": bedNumber,
-        "patientNumber": patientNumber,
-        "admissionNumber": admissionNumber,
-        "submissionDivision": submissionDivision,
-        "doctorSubmitted": doctorSubmitted,
-        "submissionTime": submissionTime,
-        "doctorInspector": doctorInspector,
-        "note": note
-      }
-    }]
+      {
+        "id": id,
+        "result": result,
+        "unit": unit,
+        "resultText": resultText,
+        "testTime": brasilDateTime,
+        "pid": pid,
+        "recordId": recordId,
+        "sampleId": sampleId,
+        "sampleType": sampleType,
+        "patient": {
+          "name": name,
+          "gender":gender,
+          "bedNumber": bedNumber,
+          "patientNumber": patientNumber,
+          "admissionNumber": admissionNumber,
+          "submissionDivision": submissionDivision,
+          "doctorSubmitted": doctorSubmitted,
+          "submissionTime": submissionTime,
+          "doctorInspector": doctorInspector,
+          "note": note
+        }
+      }]
   }
   
   console.log('* Dados *:', JSON.stringify(dadosGerais, null, 2))
 }
-
-app.use(function(req, res, next) {
-  counter++
-  console.log('* message received *');
-  console.log('')
-  console.log(req.msg.log());
-  if(counter === 2) getData(req.msg)
-  next();
-});
-
-app.use(function(req, res, next){
-  console.log('* sending ack *');
-  console.log(res.ack.log())
-  res.end();
-});
-
-app.use(function (err, req, res, next){
-  console.log('* error *');
-  console.log(err);
-  
-  if(res && res.ack) {
-    let msa = res.ack.getSegment('MSA');
-    if(msa) {
-      msa.setField(1, 'AR');
-    }
-    res.ack.addSegment('ERR', err.message);
-    res.end();
-  } else {
-    console.error('Response or ACK is undefined');
-  }
-});
-
-app.start(7777);
-console.log('Servidor HL7 ouvindo na porta 7777');
