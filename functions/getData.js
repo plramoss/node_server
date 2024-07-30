@@ -2,7 +2,7 @@ import getSegments from "./getSegments.js";
 
 export default function getData(data){
   const now = new Date();
-  const brasilDateTime = new Intl.DateTimeFormat('pt-BR', {
+  const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', second: '2-digit',
     timeZone: 'America/Sao_Paulo'
@@ -12,53 +12,73 @@ export default function getData(data){
   // MSH
   let sendingApplication = segments.mshSegment.getField(3).trim() ?? '';
   let sendingFacility = segments.mshSegment.getField(4).trim() ?? '';
-  
-  // OBR
-  let obr2 = segments.obrSegment.getField(2).trim() ?? '';
-  let obr3 = segments.obrSegment.getField(3).trim() ?? '';
-  let obr15 = segments.obrSegment.getField(15).trim() ?? '';
-  let obr14 = segments.obrSegment.getField(14).trim() ?? '';
-  let obr13 = segments.obrSegment.getField(13).trim() ?? '';
-  let obr16 = segments.obrSegment.getField(16).trim() ?? '';
-  let obr17 = segments.obrSegment.getField(17).trim() ?? '';
-  let obr20 = segments.obrSegment.getField(20).trim() ?? '';
+  let messageControlId = segments.mshSegment.getField(10).trim() ?? '';
+  let sequenceNumber = segments.mshSegment.getField(13).trim() ?? '';
+  let countryCode = segments.mshSegment.getField(17).trim() ?? '';
   
   // PID
-  let name = segments.pidSegment.getField(5).trim() ?? '';
-  let gender = segments.pidSegment.getField(8).trim() ?? '';
-  let patientNumber = segments.pidSegment.getComponent(3, 1).trim() ?? '';
-  let admissionNumber = segments.pidSegment.getComponent(3, 2). trim() ?? '';
-  let bedNumber = segments.pidSegment.getComponent(3, 3).trim() ?? '';
+  let patientIdentifierList = segments.pidSegment.getField(3).trim() ?? '';
+  let patientName = segments.pidSegment.getField(5).trim() ?? '';
+  let dateTimeBirth = segments.pidSegment.getField(7).trim() ?? '';
+  let administrativeSex = segments.pidSegment.getField(8).trim() ?? '';
+  
+  // OBR
+  let placerOrderNumber = segments.obrSegment.getField(2).trim() ?? '';
+  let fillerOrderNumber = segments.obrSegment.getField(3).trim() ?? '';
+  let universalServiceId = segments.obrSegment.getField(4).trim() ?? '';
+  let observationDateTime = segments.obrSegment.getField(7).trim() ?? '';
+  let observationEndDateTime = segments.obrSegment.getField(8).trim() ?? '';
+  let relevantClinicalInformation = segments.obrSegment.getField(13).trim() ?? '';
+  let specimenReceivedDateTime = segments.obrSegment.getField(14).trim() ?? '';
+  let specimenSource = segments.obrSegment.getField(15).trim() ?? '';
+  let orderingProvider = segments.obrSegment.getField(16).trim() ?? '';
+  let orderCallbackPhone = segments.obrSegment.getField(17).trim() ?? '';
+  let fillerField1 = segments.obrSegment.getField(20).trim() ?? '';
+  
+
   
   // OBX
   let finalObxSegment = [];
   segments.obxSegments.forEach(segment => {
     const objectSegment = {
-      "id": segment.getField(4).trim() ?? '',
-      "result": segment.getField(5).trim() ?? '',
-      "unit": segment.getField(6).trim() ?? '',
-      "resultText": segment.getField(13).trim() ?? '',
-      "pid": segment.getField(1).trim() ?? '',
+      "obxSetId": segment.getField(1).trim() ?? '',
+      "valueType": segment.getField(2).trim() ?? '',
+      "observationIdentifier": segment.getField(3).trim() ?? '',
+      "observationSubId": segment.getField(4).trim() ?? '',
+      "observationValue": segment.getField(5).trim() ?? '',
+      "units": segment.getField(6).trim() ?? '',
+      "referencesRange": segment.getField(7).trim() ?? '',
+      // "observationResultStatus": segment.getField(11).trim() ?? '',
+      "userDefinedAccessChecks": segment.getField(13).trim() ?? '',
+      "dateTimeObservation": segment.getField(14).trim() ?? '',
+      "responsibleObserver": segment.getField(16).trim() ?? '',
     }
     finalObxSegment.push(objectSegment)
   })
   
   
   let jsonData = {
-    "instrumentId": sendingApplication,
-    "instrumentModel": sendingFacility,
-    "sourceIp": "",
+    "sendingApplication": sendingApplication,
+    "sendingFacility": sendingFacility,
+    "messageControlId": messageControlId,
+    "sequenceNumber": sequenceNumber,
+    "countryCode": countryCode,
     "patient": {
-      "name": name,
-      "gender":gender,
-      "bedNumber": bedNumber,
-      "patientNumber": patientNumber,
-      "admissionNumber": admissionNumber,
-      "submissionDivision": obr2,
-      "doctorSubmitted": obr3,
-      "submissionTime": obr2,
-      "doctorInspector": obr2,
-      "note": obr2
+      "patientIdentifierList": patientIdentifierList,
+      "patientName": patientName,
+      "dateTimeBirth": dateTimeBirth,
+      "administrativeSex": administrativeSex,
+      "placerOrderNumber": placerOrderNumber,
+      "fillerOrderNumber": fillerOrderNumber,
+      "universalServiceId": universalServiceId,
+      "observationDateTime": observationDateTime,
+      "observationEndDateTime": observationEndDateTime,
+      "relevantClinicalInformation": relevantClinicalInformation,
+      "specimenReceivedDateTime": specimenReceivedDateTime,
+      "specimenSource": specimenSource,
+      "orderingProvider": orderingProvider,
+      "orderCallbackPhone": orderCallbackPhone,
+      "fillerField1": fillerField1,
     },
     "tests": finalObxSegment
   }

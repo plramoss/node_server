@@ -3,8 +3,6 @@ import filterSegments from "./filterSegments.js";
 export default function getSegments(data) {
   const segments = filterSegments(data);
   
-  console.log(segments)
-  
   let pidSegment = data.getSegment('PID');
   let obrSegment = data.getSegment('OBR');
   let mshSegment = data.header
