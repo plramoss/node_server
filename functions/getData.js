@@ -1,3 +1,5 @@
+import getSegments from "./getSegments.js";
+
 export default function getData(data){
   const now = new Date();
   const brasilDateTime = new Intl.DateTimeFormat('pt-BR', {
@@ -6,77 +8,60 @@ export default function getData(data){
     timeZone: 'America/Sao_Paulo'
   }).format(now);
   
-  // segmentos
-  let pidSegment = data.getSegment('PID');
-  let obrSegment = data.getSegment('OBR');
-  let obxSegment = data.getSegment('OBX');
+  const segments = getSegments(data);
+  // MSH
+  let sendingApplication = segments.mshSegment.getField(3).trim() ?? '';
+  let sendingFacility = segments.mshSegment.getField(4).trim() ?? '';
   
-  // equipamento
-  let instrumentId = `${data.header.getComponent(2, 2).trim()} ${data.header.getComponent(2, 3).trim()}`;
-  let instrumentModel = data.header.getComponent(2, 1).trim();
+  // OBR
+  let obr2 = segments.obrSegment.getField(2).trim() ?? '';
+  let obr3 = segments.obrSegment.getField(3).trim() ?? '';
+  let obr15 = segments.obrSegment.getField(15).trim() ?? '';
+  let obr14 = segments.obrSegment.getField(14).trim() ?? '';
+  let obr13 = segments.obrSegment.getField(13).trim() ?? '';
+  let obr16 = segments.obrSegment.getField(16).trim() ?? '';
+  let obr17 = segments.obrSegment.getField(17).trim() ?? '';
+  let obr20 = segments.obrSegment.getField(20).trim() ?? '';
   
-  // testes
-  let id = obxSegment.getField(4).trim();
-  let result = obxSegment.getField(5).trim();
-  let unit = obxSegment.getField(6).trim();
-  let resultText = obxSegment.getField(13).trim();
-  let pid = obxSegment.getField(1).trim();
-  let recordId = obrSegment.getField(2).trim();
-  let sampleId = obrSegment.getField(3).trim();
-  let sampleType = obrSegment.getField(15).trim();
+  // PID
+  let name = segments.pidSegment.getField(5).trim() ?? '';
+  let gender = segments.pidSegment.getField(8).trim() ?? '';
+  let patientNumber = segments.pidSegment.getComponent(3, 1).trim() ?? '';
+  let admissionNumber = segments.pidSegment.getComponent(3, 2). trim() ?? '';
+  let bedNumber = segments.pidSegment.getComponent(3, 3).trim() ?? '';
   
-  // paciente
-  let name = pidSegment.getField(5).trim();
-  let gender = pidSegment.getField(8).trim();
-  let bedNumber = pidSegment.getComponent(3, 3).trim();
-  let patientNumber = pidSegment.getComponent(3, 1).trim();
-  let admissionNumber = pidSegment.getComponent(3, 2).trim();
-  let submissionTime = obrSegment.getField(14).trim();
-  let note = obrSegment.getField(13).trim();
-  
-  let submissionDivision = '';
-  let doctorSubmitted = '';
-  let doctorInspector = '';
-  
-  if (obrSegment.fields.length >= 16) {
-    doctorSubmitted = obrSegment.getField(16).trim();
-    if(obrSegment.fields.length >= 17) {
-      submissionDivision = obrSegment.getField(17).trim();
-      if (obrSegment.fields.length === 20) {
-        doctorInspector = obrSegment.getField(20).trim()
-      }
+  // OBX
+  let finalObxSegment = [];
+  segments.obxSegments.forEach(segment => {
+    const objectSegment = {
+      "id": segment.getField(4).trim() ?? '',
+      "result": segment.getField(5).trim() ?? '',
+      "unit": segment.getField(6).trim() ?? '',
+      "resultText": segment.getField(13).trim() ?? '',
+      "pid": segment.getField(1).trim() ?? '',
     }
-  }
+    finalObxSegment.push(objectSegment)
+  })
   
-  let dadosGerais = {
-    "instrumentId": instrumentId,
-    "instrumentModel": instrumentModel,
+  
+  let jsonData = {
+    "instrumentId": sendingApplication,
+    "instrumentModel": sendingFacility,
     "sourceIp": "",
-    "tests": [
-      {
-        "id": id,
-        "result": result,
-        "unit": unit,
-        "resultText": resultText,
-        "testTime": brasilDateTime,
-        "pid": pid,
-        "recordId": recordId,
-        "sampleId": sampleId,
-        "sampleType": sampleType,
-        "patient": {
-          "name": name,
-          "gender":gender,
-          "bedNumber": bedNumber,
-          "patientNumber": patientNumber,
-          "admissionNumber": admissionNumber,
-          "submissionDivision": submissionDivision,
-          "doctorSubmitted": doctorSubmitted,
-          "submissionTime": submissionTime,
-          "doctorInspector": doctorInspector,
-          "note": note
-        }
-      }]
+    "patient": {
+      "name": name,
+      "gender":gender,
+      "bedNumber": bedNumber,
+      "patientNumber": patientNumber,
+      "admissionNumber": admissionNumber,
+      "submissionDivision": obr2,
+      "doctorSubmitted": obr3,
+      "submissionTime": obr2,
+      "doctorInspector": obr2,
+      "note": obr2
+    },
+    "tests": finalObxSegment
   }
   
-  console.log('* Dados *:', JSON.stringify(dadosGerais, null, 2))
+  console.log('* Dados *:', JSON.stringify(jsonData, null, 2))
 }

@@ -32,12 +32,12 @@ export default function filterSegments(data) {
   const pv1Segment = hasPV1 ? data.segments.filter(segment => segment.name === 'PV1') : [];
   
   if (hasPV1 && hasNte) {
-    return { obxSegments, nteSegments, hasPV1 };
+    return { obxSegments, nteSegments, pv1Segment };
   } else if (hasPV1) {
     return { obxSegments, pv1Segment };
   } else if (hasNte) {
     return { obxSegments, nteSegments }
   } else {
-    return obxSegments;
+    return {obxSegments};
   }
 }

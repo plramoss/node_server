@@ -10,8 +10,7 @@ server.use(function(req, res, next) { //novo
   console.log(`* message received *`);
   console.log(req.msg.log());
   console.log('');
-  const filter = filterSegments(req.msg)
-  console.log(filter)
+  getData(req.msg);
   // console.log('');
   // console.log('Segmento: MSH')
   // req.msg.header.fields.forEach(field => extractValue(field))
