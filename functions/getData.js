@@ -10,11 +10,11 @@ export default function getData(data){
   
   const segments = getSegments(data);
   // MSH
-  let sendingApplication = segments.mshSegment.getField(3).trim() ?? '';
-  let sendingFacility = segments.mshSegment.getField(4).trim() ?? '';
-  let messageControlId = segments.mshSegment.getField(10).trim() ?? '';
-  let sequenceNumber = segments.mshSegment.getField(13).trim() ?? '';
-  let countryCode = segments.mshSegment.getField(17).trim() ?? '';
+  let sendingApplication = segments.mshSegment.getField(1).trim() ?? '';
+  let sendingFacility = segments.mshSegment.getField(2).trim() ?? '';
+  let messageControlId = segments.mshSegment.getField(8).trim() ?? '';
+  let sequenceNumber = segments.mshSegment.getField(11).trim() ?? '';
+  let countryCode = segments.mshSegment.getField(15).trim() ?? '';
   
   // PID
   let patientIdentifierList = segments.pidSegment.getField(3).trim() ?? '';
