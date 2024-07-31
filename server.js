@@ -1,7 +1,5 @@
 import hl7 from 'simple-hl7';
-import extractValue from "./functions/extractValue.js";
 import getData from "./functions/getData.js";
-import filterSegments from "./functions/filterSegments.js";
 
 let server = hl7.tcp();
 
@@ -11,22 +9,6 @@ server.use(function(req, res, next) { //novo
   console.log(req.msg.log());
   console.log('');
   getData(req.msg);
-  // console.log('');
-  // console.log('Segmento: MSH')
-  // req.msg.header.fields.forEach(field => extractValue(field))
-  // console.log('='.repeat(30))
-  // console.log('')
-  //
-  // segmentos.forEach((segment, index) => {
-  //   const fields = segment.fields;
-  //   console.log(`Segmento: ${segment.name}`)
-  //   fields.map((f) => {
-  //     extractValue(f)
-  //   })
-  //   console.log('='.repeat(30))
-  //   console.log('')
-  // })
-  // getData(req.msg)
   
   next();
 });

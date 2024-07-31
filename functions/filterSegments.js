@@ -18,9 +18,6 @@ export default function filterSegments(data) {
   
   if ('NTE' in counts) {
     hasNte = true;
-    if ('NTE' in duplicates) {
-      nteDuplicated = true;
-    }
   }
 
   if ('PV1' in counts) {
@@ -38,6 +35,6 @@ export default function filterSegments(data) {
   } else if (hasNte) {
     return { obxSegments, nteSegments }
   } else {
-    return {obxSegments};
+    return { obxSegments };
   }
 }
