@@ -27,6 +27,9 @@ const wondfo = 'MSH|^~\\&|FineCarePlus|飞测ⅡPlus^00:21:62:41:ED:35^FS-113|PO
   'OBX|197001020052|NM||MAU|23.7|mg/L|0.0-20.0||||||23.7 mg/L  |19700102024858||med inspetor\r' +
   'DSC|1|F'
 
+const wondfoEqu = 'MSH|^~\\&|FineCarePlus|飞测ⅡPlus^00:1F:DE:12:6A:19^FS-113|POCT|POCT_SERVER^^PC|19700101232716||ESU^U01^ESU_U01|1|P|2.4||||0|CHN|UTF8\r' +
+    'EQU|00:1F:DE:12:6A:19^飞测ⅡPlus^wondfo|19700101232716|OP^正常运行|L^Local本地^App^1.0.0.1.0.7.87^2019-nCoV Ag,90;2019nCoV IgM/IgG,24;AFP,69;BNP,34;CEA,72;CK-MB,153;CRP,198;Cortisol,91;Cys C,119;D-Dimer,405;FPSA,125;FSH,,57;LH,77;MAU,127;Myo,82;NT-proBNP,318;PCT,188;PSA,216;T3,110;T4,96;TSH,91;Vitamin D,75;cTnI,413;cTnI/CK-MB/Myo,320;cTnT,115;β-hCG,167^3911|N^正常'
+
 const dymind = 'MSH|^~\&|DP-H1x|Dymind|||20240725160643||ORU^R01|20240718_114704_524|P|2.3.1|DMP1012249003|||||UNICODE\r' +
   'PID|1\r' +
   'PV1|1\r' +
@@ -68,4 +71,4 @@ const eco = 'MSH|^~\&|VA20DBITG2633^ac00000300000000^EUI-64|BioNote|||2024072515
   'OBX|1|NM|BN0280^cPRG^BN|1.0.0.28|1.33|ng/mL^nanogram per milliliter^UCUM|[1.00;30.00]||||F|||20240131155805||guest|||20240131155805\r' +
   'NTE|1||Interpretation=Pre-LH surge\r'
 
-export {eco, dymind, pointCare, wondfo}
+export {eco, dymind, pointCare, wondfo, wondfoEqu}

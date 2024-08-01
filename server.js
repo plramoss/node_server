@@ -4,11 +4,16 @@ import getData from "./functions/getData.js";
 let server = hl7.tcp();
 
 server.use(function(req, res, next) { //novo
-  const segmentos = req.msg.segments;
+  console.log(req.raw);
   console.log(`* message received *`);
   console.log(req.msg.log());
   console.log('');
-  getData(req.msg);
+
+  if(req.msg.segments.filter(seg => seg.name === 'EQU').length === 0) {
+    getData(req.msg);
+  }
+
+
   
   next();
 });

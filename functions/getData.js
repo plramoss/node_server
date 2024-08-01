@@ -9,31 +9,32 @@ export default function getData(data){
   }).format(now);
   
   const segments = getSegments(data);
+
   // MSH
-  let sendingApplication = segments.mshSegment.getField(1).trim() ?? '';
-  let sendingFacility = segments.mshSegment.getField(2).trim() ?? '';
-  let messageControlId = segments.mshSegment.getField(8).trim() ?? '';
-  let sequenceNumber = segments.mshSegment.getField(11).trim() ?? '';
-  let countryCode = segments.mshSegment.getField(15).trim() ?? '';
+  let sendingApplication = segments.mshSegment?.getField(1).trim() ?? '';
+  let sendingFacility = segments.mshSegment?.getField(2).trim() ?? '';
+  let messageControlId = segments.mshSegment?.getField(8).trim() ?? '';
+  let sequenceNumber = segments.mshSegment?.getField(11).trim() ?? '';
+  let countryCode = segments.mshSegment?.getField(15).trim() ?? '';
   
   // PID
-  let patientIdentifierList = segments.pidSegment.getField(3).trim() ?? '';
-  let patientName = segments.pidSegment.getField(5).trim() ?? '';
-  let dateTimeBirth = segments.pidSegment.getField(7).trim() ?? '';
-  let administrativeSex = segments.pidSegment.getField(8).trim() ?? '';
+  let patientIdentifierList = segments.pidSegment?.getField(3).trim() ?? '';
+  let patientName = segments.pidSegment?.getField(5).trim() ?? '';
+  let dateTimeBirth = segments.pidSegment?.getField(7).trim() ?? '';
+  let administrativeSex = segments.pidSegment?.getField(8).trim() ?? '';
   
   // OBR
-  let placerOrderNumber = segments.obrSegment.getField(2).trim() ?? '';
-  let fillerOrderNumber = segments.obrSegment.getField(3).trim() ?? '';
-  let universalServiceId = segments.obrSegment.getField(4).trim() ?? '';
-  let observationDateTime = segments.obrSegment.getField(7).trim() ?? '';
-  let observationEndDateTime = segments.obrSegment.getField(8).trim() ?? '';
-  let relevantClinicalInformation = segments.obrSegment.getField(13).trim() ?? '';
-  let specimenReceivedDateTime = segments.obrSegment.getField(14).trim() ?? '';
-  let specimenSource = segments.obrSegment.getField(15).trim() ?? '';
-  let orderingProvider = segments.obrSegment.getField(16).trim() ?? '';
-  let orderCallbackPhone = segments.obrSegment.getField(17).trim() ?? '';
-  let fillerField1 = segments.obrSegment.getField(20).trim() ?? '';
+  let placerOrderNumber = segments.obrSegment?.getField(2).trim() ?? '';
+  let fillerOrderNumber = segments.obrSegment?.getField(3).trim() ?? '';
+  let universalServiceId = segments.obrSegment?.getField(4).trim() ?? '';
+  let observationDateTime = segments.obrSegment?.getField(7).trim() ?? '';
+  let observationEndDateTime = segments.obrSegment?.getField(8).trim() ?? '';
+  let relevantClinicalInformation = segments.obrSegment?.getField(13).trim() ?? '';
+  let specimenReceivedDateTime = segments.obrSegment?.getField(14).trim() ?? '';
+  let specimenSource = segments.obrSegment?.getField(15).trim() ?? '';
+  let orderingProvider = segments.obrSegment?.getField(16).trim() ?? '';
+  let orderCallbackPhone = segments.obrSegment?.getField(17).trim() ?? '';
+  let fillerField1 = segments.obrSegment?.getField(20).trim() ?? '';
   
 
   
@@ -41,17 +42,17 @@ export default function getData(data){
   let finalObxSegment = [];
   segments.obxSegments.forEach(segment => {
     const objectSegment = {
-      "obxSetId": segment.getField(1).trim() ?? '',
-      "valueType": segment.getField(2).trim() ?? '',
-      "observationIdentifier": segment.getField(3).trim() ?? '',
-      "observationSubId": segment.getField(4).trim() ?? '',
-      "observationValue": segment.getField(5).trim() ?? '',
-      "units": segment.getField(6).trim() ?? '',
-      "referencesRange": segment.getField(7).trim() ?? '',
-      // "observationResultStatus": segment.getField(11).trim() ?? '',
-      "userDefinedAccessChecks": segment.getField(13).trim() ?? '',
-      "dateTimeObservation": segment.getField(14).trim() ?? '',
-      "responsibleObserver": segment.getField(16).trim() ?? '',
+      "obxSetId": segment?.getField(1).trim() ?? '',
+      "valueType": segment?.getField(2).trim() ?? '',
+      "observationIdentifier": segment?.getField(3).trim() ?? '',
+      "observationSubId": segment?.getField(4).trim() ?? '',
+      "observationValue": segment?.getField(5).trim() ?? '',
+      "units": segment?.getField(6).trim() ?? '',
+      "referencesRange": segment?.getField(7).trim() ?? '',
+      // "observationResultStatus": segment?.getField(11).trim() ?? '',
+      "userDefinedAccessChecks": segment?.getField(13).trim() ?? '',
+      "dateTimeObservation": segment?.getField(14).trim() ?? '',
+      "responsibleObserver": segment?.getField(16).trim() ?? '',
     }
     finalObxSegment.push(objectSegment)
   })
