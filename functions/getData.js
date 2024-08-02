@@ -1,6 +1,6 @@
 import getSegments from "./getSegments.js";
 
-export default function getData(data){
+export function getHL7Data(data){
   const now = new Date();
   const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -46,12 +46,12 @@ export default function getData(data){
       "valueType": segment?.getField(2).trim() ?? '',
       "observationIdentifier": segment?.getField(3).trim() ?? '',
       "observationSubId": segment?.getField(4).trim() ?? '',
-      "observationValue": segment?.getField(5).trim() ?? '',
+      "observationValue": segment?.getField(5).trim() ?? '',//
       "units": segment?.getField(6).trim() ?? '',
       "referencesRange": segment?.getField(7).trim() ?? '',
       // "observationResultStatus": segment?.getField(11).trim() ?? '',
       "userDefinedAccessChecks": segment?.getField(13).trim() ?? '',
-      "dateTimeObservation": segment?.getField(14).trim() ?? '',
+      "dateTimeObservation": segment?.getField(14).trim() ?? '',//
       "responsibleObserver": segment?.getField(16).trim() ?? '',
     }
     finalObxSegment.push(objectSegment)
@@ -85,4 +85,42 @@ export default function getData(data){
   }
   
   console.log('* Dados *:', JSON.stringify(jsonData, null, 2))
+}
+
+/**
+ * A partir do segmento recebido, extrai os dados e constrói um JSON
+ * @param {number} type 1. Celer || 2. BioTech
+ * @param {segment} segment Segmento criado a partir de uma mensagem fora do formato HL7.
+ * @returns {Object}
+ **/
+export function getNonHL7Data(type, segment) {
+  if (type === 1) {
+    let jsonData = {
+      "sendingApplication": sendingApplication,
+      "sendingFacility": sendingFacility,
+      "messageControlId": messageControlId,
+      "sequenceNumber": sequenceNumber,
+      "countryCode": countryCode,
+      "patient": {
+        "patientIdentifierList": patientIdentifierList,
+        "patientName": patientName,
+        "dateTimeBirth": dateTimeBirth,
+        "administrativeSex": administrativeSex,
+        "placerOrderNumber": placerOrderNumber,
+        "fillerOrderNumber": fillerOrderNumber,
+        "universalServiceId": universalServiceId,
+        "observationDateTime": observationDateTime,
+        "observationEndDateTime": observationEndDateTime,
+        "relevantClinicalInformation": relevantClinicalInformation,
+        "specimenReceivedDateTime": specimenReceivedDateTime,
+        "specimenSource": specimenSource,
+        "orderingProvider": orderingProvider,
+        "orderCallbackPhone": orderCallbackPhone,
+        "fillerField1": fillerField1,
+      },
+      "tests": finalObxSegment
+    }
+    
+    console.log('* Dados *:', JSON.stringify(jsonData, null, 2))
+  }
 }

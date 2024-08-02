@@ -1,0 +1,5 @@
+MSH|^~\&|FineCarePlus|飞测ⅡPlus^00:21:62:41:ED:35^FS-113|POCT|POCT_SERVER^^PC|19700102044354||ORU^R01^ORU_R01|197001020073|P|2.4||||0|CHN|UTF8
+PID|197001020052||num paciente^num admissao^num leito||nome|||F
+OBR|197001020052|F20617504|1235||||19700102024858|19700102024858|||||nota aqui|19691202|Urina|med submet|divisao submis|||med inspetor
+OBX|197001020052|NM||MAU|23.7|mg/L|0.0-20.0||||||23.7 mg/L  |19700102024858||med inspetor
+DSC|1|F
