@@ -9,34 +9,6 @@ export function getHL7Data(data){
   }).format(now);
   
   const segments = getSegments(data);
-
-  // MSH
-  let sendingApplication = segments.mshSegment?.getField(1).trim() ?? '';
-  let sendingFacility = segments.mshSegment?.getField(2).trim() ?? '';
-  let messageControlId = segments.mshSegment?.getField(8).trim() ?? '';
-  let sequenceNumber = segments.mshSegment?.getField(11).trim() ?? '';
-  let countryCode = segments.mshSegment?.getField(15).trim() ?? '';
-  
-  // PID
-  let patientIdentifierList = segments.pidSegment?.getField(3).trim() ?? '';
-  let patientName = segments.pidSegment?.getField(5).trim() ?? '';
-  let dateTimeBirth = segments.pidSegment?.getField(7).trim() ?? '';
-  let administrativeSex = segments.pidSegment?.getField(8).trim() ?? '';
-  
-  // OBR
-  let placerOrderNumber = segments.obrSegment?.getField(2).trim() ?? '';
-  let fillerOrderNumber = segments.obrSegment?.getField(3).trim() ?? '';
-  let universalServiceId = segments.obrSegment?.getField(4).trim() ?? '';
-  let observationDateTime = segments.obrSegment?.getField(7).trim() ?? '';
-  let observationEndDateTime = segments.obrSegment?.getField(8).trim() ?? '';
-  let relevantClinicalInformation = segments.obrSegment?.getField(13).trim() ?? '';
-  let specimenReceivedDateTime = segments.obrSegment?.getField(14).trim() ?? '';
-  let specimenSource = segments.obrSegment?.getField(15).trim() ?? '';
-  let orderingProvider = segments.obrSegment?.getField(16).trim() ?? '';
-  let orderCallbackPhone = segments.obrSegment?.getField(17).trim() ?? '';
-  let fillerField1 = segments.obrSegment?.getField(20).trim() ?? '';
-  
-
   
   // OBX
   let finalObxSegment = [];
@@ -59,27 +31,27 @@ export function getHL7Data(data){
   
   
   let jsonData = {
-    "sendingApplication": sendingApplication,
-    "sendingFacility": sendingFacility,
-    "messageControlId": messageControlId,
-    "sequenceNumber": sequenceNumber,
-    "countryCode": countryCode,
+    "sendingApplication": segments.mshSegment?.getField(1).trim() ?? '',
+    "sendingFacility": segments.mshSegment?.getField(2).trim() ?? '',
+    "messageControlId": segments.mshSegment?.getField(8).trim() ?? '',
+    "sequenceNumber": segments.mshSegment?.getField(11).trim() ?? '',
+    "countryCode": segments.mshSegment?.getField(15).trim() ?? '',
     "patient": {
-      "patientIdentifierList": patientIdentifierList,
-      "patientName": patientName,
-      "dateTimeBirth": dateTimeBirth,
-      "administrativeSex": administrativeSex,
-      "placerOrderNumber": placerOrderNumber,
-      "fillerOrderNumber": fillerOrderNumber,
-      "universalServiceId": universalServiceId,
-      "observationDateTime": observationDateTime,
-      "observationEndDateTime": observationEndDateTime,
-      "relevantClinicalInformation": relevantClinicalInformation,
-      "specimenReceivedDateTime": specimenReceivedDateTime,
-      "specimenSource": specimenSource,
-      "orderingProvider": orderingProvider,
-      "orderCallbackPhone": orderCallbackPhone,
-      "fillerField1": fillerField1,
+      "patientIdentifierList": segments.pidSegment?.getField(3).trim() ?? '',
+      "patientName": segments.pidSegment?.getField(5).trim() ?? '',
+      "dateTimeBirth": segments.pidSegment?.getField(7).trim() ?? '',
+      "administrativeSex": segments.pidSegment?.getField(8).trim() ?? '',
+      "placerOrderNumber": segments.obrSegment?.getField(2).trim() ?? '',
+      "fillerOrderNumber": segments.obrSegment?.getField(3).trim() ?? '',
+      "universalServiceId": segments.obrSegment?.getField(4).trim() ?? '',
+      "observationDateTime": segments.obrSegment?.getField(7).trim() ?? '',
+      "observationEndDateTime": segments.obrSegment?.getField(8).trim() ?? '',
+      "relevantClinicalInformation": segments.obrSegment?.getField(13).trim() ?? '',
+      "specimenReceivedDateTime": segments.obrSegment?.getField(14).trim() ?? '',
+      "specimenSource": segments.obrSegment?.getField(15).trim() ?? '',
+      "orderingProvider": segments.obrSegment?.getField(16).trim() ?? '',
+      "orderCallbackPhone": segments.obrSegment?.getField(17).trim() ?? '',
+      "fillerField1": segments.obrSegment?.getField(20).trim() ?? '',
     },
     "tests": finalObxSegment
   }
@@ -96,31 +68,43 @@ export function getHL7Data(data){
 export function getNonHL7Data(type, segment) {
   if (type === 1) {
     let jsonData = {
-      "sendingApplication": sendingApplication,
-      "sendingFacility": sendingFacility,
-      "messageControlId": messageControlId,
-      "sequenceNumber": sequenceNumber,
-      "countryCode": countryCode,
+      "sendingApplication": '',
+      "sendingFacility": '',
+      "messageControlId": '',
+      "sequenceNumber": '',
+      "countryCode": '',
       "patient": {
-        "patientIdentifierList": patientIdentifierList,
-        "patientName": patientName,
-        "dateTimeBirth": dateTimeBirth,
-        "administrativeSex": administrativeSex,
-        "placerOrderNumber": placerOrderNumber,
-        "fillerOrderNumber": fillerOrderNumber,
-        "universalServiceId": universalServiceId,
-        "observationDateTime": observationDateTime,
-        "observationEndDateTime": observationEndDateTime,
-        "relevantClinicalInformation": relevantClinicalInformation,
-        "specimenReceivedDateTime": specimenReceivedDateTime,
-        "specimenSource": specimenSource,
-        "orderingProvider": orderingProvider,
-        "orderCallbackPhone": orderCallbackPhone,
-        "fillerField1": fillerField1,
+        "patientIdentifierList": '',
+        "patientName": '',
+        "dateTimeBirth": '',
+        "administrativeSex": '',
+        "placerOrderNumber": '',
+        "fillerOrderNumber": '',
+        "universalServiceId": '',
+        "observationDateTime": segment?.getField(3).trim() ?? '',
+        "observationEndDateTime": '',
+        "relevantClinicalInformation": '',
+        "specimenReceivedDateTime": '',
+        "specimenSource": '',
+        "orderingProvider": '',
+        "orderCallbackPhone": '',
+        "fillerField1": '',
       },
-      "tests": finalObxSegment
+      "tests": [{
+        "obxSetId": segment?.getField(1).trim() ?? '',
+        "valueType": '',
+        "observationIdentifier": '',
+        "observationSubId": segment?.getField(4).trim() ?? '',
+        "observationValue": segment?.getField(2).trim() ?? '',//
+        "units": '',
+        "referencesRange": '',
+        "userDefinedAccessChecks": '',
+        "responsibleObserver": '',
+      }]
     }
     
     console.log('* Dados *:', JSON.stringify(jsonData, null, 2))
+  } else if (type === 2) {
+  
   }
 }
