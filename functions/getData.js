@@ -1,13 +1,13 @@
 import getSegments from "./getSegments.js";
 
+const now = new Date();
+const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  timeZone: 'America/Sao_Paulo'
+}).format(now);
+
 export function getHL7Data(data){
-  const now = new Date();
-  const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    timeZone: 'America/Sao_Paulo'
-  }).format(now);
-  
   const segments = getSegments(data);
   
   // OBX
@@ -21,7 +21,7 @@ export function getHL7Data(data){
       "observationValue": segment?.getField(5).trim() ?? '',//
       "units": segment?.getField(6).trim() ?? '',
       "referencesRange": segment?.getField(7).trim() ?? '',
-      // "observationResultStatus": segment?.getField(11).trim() ?? '',
+      "abnormalFlags": '',
       "userDefinedAccessChecks": segment?.getField(13).trim() ?? '',
       "dateTimeObservation": segment?.getField(14).trim() ?? '',//
       "responsibleObserver": segment?.getField(16).trim() ?? '',
@@ -33,6 +33,7 @@ export function getHL7Data(data){
   let jsonData = {
     "sendingApplication": segments.mshSegment?.getField(1).trim() ?? '',
     "sendingFacility": segments.mshSegment?.getField(2).trim() ?? '',
+    dateTimeMessage: dateTimeMessage,
     "messageControlId": segments.mshSegment?.getField(8).trim() ?? '',
     "sequenceNumber": segments.mshSegment?.getField(11).trim() ?? '',
     "countryCode": segments.mshSegment?.getField(15).trim() ?? '',
@@ -44,6 +45,7 @@ export function getHL7Data(data){
       "placerOrderNumber": segments.obrSegment?.getField(2).trim() ?? '',
       "fillerOrderNumber": segments.obrSegment?.getField(3).trim() ?? '',
       "universalServiceId": segments.obrSegment?.getField(4).trim() ?? '',
+      "requestedDateTime": '',
       "observationDateTime": segments.obrSegment?.getField(7).trim() ?? '',
       "observationEndDateTime": segments.obrSegment?.getField(8).trim() ?? '',
       "relevantClinicalInformation": segments.obrSegment?.getField(13).trim() ?? '',
@@ -52,6 +54,8 @@ export function getHL7Data(data){
       "orderingProvider": segments.obrSegment?.getField(16).trim() ?? '',
       "orderCallbackPhone": segments.obrSegment?.getField(17).trim() ?? '',
       "fillerField1": segments.obrSegment?.getField(20).trim() ?? '',
+      "diagnosticServSectId": '',
+      "principalResultInterpreter": ''
     },
     "tests": finalObxSegment
   }
@@ -70,6 +74,7 @@ export function getNonHL7Data(type, segment) {
     let jsonData = {
       "sendingApplication": '',
       "sendingFacility": '',
+      dateTimeMessage: dateTimeMessage,
       "messageControlId": '',
       "sequenceNumber": '',
       "countryCode": '',
@@ -81,6 +86,7 @@ export function getNonHL7Data(type, segment) {
         "placerOrderNumber": '',
         "fillerOrderNumber": '',
         "universalServiceId": '',
+        "requestedDateTime": '',
         "observationDateTime": segment?.getField(3).trim() ?? '',
         "observationEndDateTime": '',
         "relevantClinicalInformation": '',
@@ -89,6 +95,8 @@ export function getNonHL7Data(type, segment) {
         "orderingProvider": '',
         "orderCallbackPhone": '',
         "fillerField1": '',
+        "diagnosticServSectId": '',
+        "principalResultInterpreter": ''
       },
       "tests": [{
         "obxSetId": segment?.getField(1).trim() ?? '',
@@ -98,6 +106,7 @@ export function getNonHL7Data(type, segment) {
         "observationValue": segment?.getField(2).trim() ?? '',//
         "units": '',
         "referencesRange": '',
+        "abnormalFlags": '',
         "userDefinedAccessChecks": '',
         "responsibleObserver": '',
       }]

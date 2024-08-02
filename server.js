@@ -1,6 +1,6 @@
 import hl7 from 'simple-hl7';
 import { celerPattern, biotechPattern } from "./patterns.js";
-import {getDataHL7Data, getNonHL7Data} from "./functions/getData.js";
+import {getNonHL7Data} from "./functions/getData.js";
 
 const app = hl7.tcp()
 
