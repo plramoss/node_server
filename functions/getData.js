@@ -7,29 +7,30 @@ const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo'
 }).format(now);
 
-export function getHL7Data(data){
+export function getHL7Data(data, brand){
   const segments = getSegments(data);
-  
+
   // OBX
   let finalObxSegment = [];
-  segments.obxSegments.forEach(segment => {
-    const objectSegment = {
-      "obxSetId": segment?.getField(1).trim() ?? '',
-      "valueType": segment?.getField(2).trim() ?? '',
-      "observationIdentifier": segment?.getField(3).trim() ?? '',
-      "observationSubId": segment?.getField(4).trim() ?? '',
-      "observationValue": segment?.getField(5).trim() ?? '',//
-      "units": segment?.getField(6).trim() ?? '',
-      "referencesRange": segment?.getField(7).trim() ?? '',
-      "abnormalFlags": '',
-      "userDefinedAccessChecks": segment?.getField(13).trim() ?? '',
-      "dateTimeObservation": segment?.getField(14).trim() ?? '',//
-      "responsibleObserver": segment?.getField(16).trim() ?? '',
+  segments.obxSegments.forEach((segment, index) => {
+    if (brand !== 'Dymind' || (index !== 0 && index !== 2)) {
+      const objectSegment = {
+        "obxSetId": segment?.getField(1).trim() ?? '',
+        "valueType": segment?.getField(2).trim() ?? '',
+        "observationIdentifier": segment?.getField(3).trim() ?? '',
+        "observationSubId": segment?.getField(4).trim() ?? '',
+        "observationValue": segment?.getField(5).trim() ?? '',//
+        "units": segment?.getField(6).trim() ?? '',
+        "referencesRange": segment?.getField(7).trim() ?? '',
+        "abnormalFlags": '',
+        "userDefinedAccessChecks": segment?.getField(13).trim() ?? '',
+        "dateTimeObservation": segment?.getField(14).trim() ?? '',//
+        "responsibleObserver": segment?.getField(16).trim() ?? '',
+      }
+      finalObxSegment.push(objectSegment);
     }
-    finalObxSegment.push(objectSegment)
-  })
-  
-  
+  });
+
   let jsonData = {
     "sendingApplication": segments.mshSegment?.getField(1).trim() ?? '',
     "sendingFacility": segments.mshSegment?.getField(2).trim() ?? '',
@@ -59,8 +60,8 @@ export function getHL7Data(data){
     },
     "tests": finalObxSegment
   }
-  
-  console.log('* Dados *:', JSON.stringify(jsonData, null, 2))
+
+  console.log('* Dados *:', JSON.stringify(jsonData, null, 2));
 }
 
 /**

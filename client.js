@@ -2,10 +2,10 @@ import hl7 from 'simple-hl7';
 import { biotech, celer, wondfo, dymind, eco, pointcare, msgEqu } from "./messages/index.js";
 import fs from 'fs'
 
-const rawMessage = fs.readFileSync(`${celer}`, 'utf-8');
+const rawMessage = fs.readFileSync(`${dymind}`, 'utf-8');
 
 const client = hl7.Server.createTcpClient({
-  host: '10.202.30.52',
+  host: '10.202.30.118',
   port: 7777,
   keepalive: true,
   callback: function (err, ack) {
