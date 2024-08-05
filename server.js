@@ -15,11 +15,11 @@ app.use(function (req, res, next) {
   if (rawMessage.startsWith('\x0BMSH')) {
     console.log('* Mensagem HL7 recebida *');
     console.log(req.msg.log());
-    const hl7Message = parser.parse(rawMessage);
+     //const hl7Message = parser.parse(rawMessage);
 
     const brand = req.msg.header.getComponent(2, 1).trim();
-    getHL7Data(hl7Message, brand);
-
+    getHL7Data(req.msg, brand);
+   // getHL7Data(hl7Message, brand);
   } else {
     console.log('* A mensagem recebida não é HL7 *');
     const msg = rawMessage.replace('\x0B', '').replace('\x1C\r', '');

@@ -1,15 +1,13 @@
-// functions/mailer.js
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Verificar se as variáveis de ambiente estão carregadas corretamente
 console.log('EMAIL:', process.env.EMAIL);
 console.log('PASS:', process.env.PASS);
 
 let transporter = nodemailer.createTransport({
-  host: 'smtp.office365.com',
+  host: 'smtp.gmail.com',
   port: 587,
   secure: false,
   auth: {
@@ -18,11 +16,11 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-export async function sendEmail(subject, text, recipients) {
+export async function sendEmail(subject, text) {
   let mailOptions = {
     from: process.env.EMAIL,
-    to: recipients.join(', '),
-    subject: 'Exame',
+    to: ["ju96.dev@gmail.com", "pmr13.dev@gmail.com"],
+    subject: subject,
     text: text
   }
 

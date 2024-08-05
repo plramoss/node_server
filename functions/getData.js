@@ -1,4 +1,5 @@
 import getSegments from "./getSegments.js";
+import {sendEmail} from "./mailer.js";
 
 const now = new Date();
 const dateTimeMessage = new Intl.DateTimeFormat('pt-BR', {
@@ -31,6 +32,16 @@ export function getHL7Data(data, brand){
     }
   });
 
+ // NTE
+  let finalNteSegment = [];
+  segments?.nteSegments?.forEach((segment) => {
+      const objectNteSegment = {
+        "nteSetId": segment?.getField(1).trim() ?? '',
+        "comment": segment?.getField(3).trim() ?? '',
+      }
+    finalNteSegment.push(objectNteSegment);
+  });
+
   let jsonData = {
     "sendingApplication": segments.mshSegment?.getField(1).trim() ?? '',
     "sendingFacility": segments.mshSegment?.getField(2).trim() ?? '',
@@ -58,10 +69,12 @@ export function getHL7Data(data, brand){
       "diagnosticServSectId": '',
       "principalResultInterpreter": ''
     },
-    "tests": finalObxSegment
+    "tests": finalObxSegment,
+    "notes": finalNteSegment
   }
 
   console.log('* Dados *:', JSON.stringify(jsonData, null, 2));
+  sendEmail('Teste email', JSON.stringify(jsonData, null, 2)).then(r => console.log(r)).catch(e => console.log(e));
 }
 
 /**
